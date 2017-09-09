@@ -1,15 +1,21 @@
 # mixer-Chat-Overlay
 A simple chat overlay for Mixer.com users.
 
-Usage: <br>
-1. Open up OBS. <br>
-2. Create a new browser overlay element. <br>
-3. Put in the url for the chat theme you want. <br>
-4. Make sure to customize the URL with your name.  <br>
+## Usage:
+1. Clone or download ZIP (https://github.com/Lana-chan/Mixer-Chat-Overlay/archive/master.zip).
+2. Open up OBS.
+3. Create a new browser overlay element.
+4. Put in the URL for the chat.
+5. Make sure to customize the URL with your name.
 
-Themes:  <br>
-Original: http://firebottle.tv/projects/mixerchatter/chat.html?username=YOURNAMEHERE&timer=8000  <br>
-Rockstar: http://firebottle.tv/projects/mixerchatter/rockstar-theme/chat.html?username=YOURNAMEHERE&timer=8000  <br>
+## URL:
+Use the file locally (do not check local file on OBS) following this example:
 
-Settings:
-Just one setting right now! You can change the timer to have it show messages for different lengths of time. 1000 = one second. You can also set it to 0 to have messages never go away.
+```
+file:///C:/path/to/Mixer-Chat-Overlay/mixerchatter/chat/chat.html?username=MixerUsername&timer=10000&dir=top
+```
+
+## Settings:
+1. username - your Mixer username or of the channel you want to monitor.<br>
+2. timer - time in milliseconds for each chat message to stay on screen.<br>
+3. dir - direction which the chat goes, 'top' or 'bottom', default 'bottom'.
