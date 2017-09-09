@@ -25,7 +25,7 @@ $.getJSON( "https://Mixer.com/api/v1/channels/"+username, function( data ) {
     subIcon = data.badge.url;
   } else {
     subIcon = "";
-  } 
+  }
 
   // Get chat endpoints after getting user ID.
   $.getJSON( "https://Mixer.com/api/v1/chats/"+userID, function( data ) {
@@ -37,6 +37,19 @@ $.getJSON( "https://Mixer.com/api/v1/channels/"+username, function( data ) {
 // General Settings
 var chatTime = getUrlParameter('timer');
 timeToShowChat = chatTime; // in Milliseconds
+var direction = getUrlParameter('dir');
+chatDirection = direction || 'bottom'; // 'top' = top to bottom
+
+// initialization
+function initialize() {
+  var sheet = $("#dynamic-css").get(0).sheet;
+  if(chatDirection == 'top') {
+    var style = '.chat{ top: 0px; }';
+  } else if(chatDirection == 'bottom') {
+    var style = '.chat{ bottom: 0px; }';
+  }
+  sheet.insertRule(style, 0);
+}
 
 // CHAT
 // Connect to mixer Websocket
@@ -53,8 +66,9 @@ function mixerSocketConnect(endpoints){
           var connector = JSON.stringify({type: "method", method: "auth", arguments: [userID], id: 1});
           ws.send(connector);
           console.log('Connection Opened...');
-          $("<div class='chatmessage' id='1'>Chat connection established to "+username+".</div>").appendTo(".chat").hide().fadeIn('fast').delay(5000).fadeOut('fast', function(){ $(this).remove(); });
-       
+          var html = "<div class='chatmessage' id='1'>Chat connection established to "+username+".</div>";
+          addToScreen(html, 5000);
+
           // Error Handling & Keep Alive
           setInterval(function(){
             errorHandle(ws);
@@ -110,7 +124,7 @@ function chat(evt){
               completeMessage += '<div class="emoticon" style="background-image:url(https:\/\/Mixer.com/_latest/emoticons/'+emoticonPack+'.png); background-position:-'+emoticonCoordX+'px -'+emoticonCoordY+'px; height:24px; width:24px; display:inline-block;"></div>';
             } else if (emoticonSource == "external"){
             completeMessage += '<div class="emoticon" style="background-image:url('+emoticonPack+'); background-position:-'+emoticonCoordX+'px -'+emoticonCoordY+'px; height:24px; width:24px; display:inline-block;"></div>';
-            }       
+            }
           } else if (type == "link"){
             var chatLinkOrig = this.text;
             var chatLink = chatLinkOrig.replace(/(<([^>]+)>)/ig, "");
@@ -123,11 +137,8 @@ function chat(evt){
 
         // Place the completed chat message into the chat area.
         // Fade message in, wait X time, fade out, then remove.
-        if (timeToShowChat === '0'){
-          $("<div class='chatmessage' id='"+messageID+"'><div class='chatusername "+userroles+"'>"+username+" <div class='badge'><img src="+subIcon+"></div></div> "+completeMessage+"</div>").appendTo(".chat");
-        } else {
-          $("<div class='chatmessage' id='"+messageID+"'><div class='chatusername "+userroles+"'>"+username+" <div class='badge'><img src="+subIcon+"></div></div> "+completeMessage+"</div>").appendTo(".chat").hide().fadeIn('fast').delay(timeToShowChat).fadeOut('fast', function(){ $(this).remove(); });
-        }
+        var html = "<div class='chatmessage' id='"+messageID+"'><div class='chatusername "+userroles+"'>"+username+" <div class='badge'><img src="+subIcon+"></div></div> "+completeMessage+"</div>";
+        addToScreen(html);
 
     } else if (eventType == "ClearMessages"){
       // If someone clears chat, then clear all messages on screen.
@@ -138,6 +149,14 @@ function chat(evt){
     }
 }
 
+function addToScreen(html, duration) {
+  duration = duration || timeToShowChat; // optional parameter
+  var elem = $(html).appendTo('.chat');
+
+  if (duration != '0') {
+    elem.hide().fadeIn('fast').delay(duration).fadeOut('fast', function(){ $(this).remove(); });
+  }
+}
 
 // Error Handling & Keep Alive
 function errorHandle(ws){

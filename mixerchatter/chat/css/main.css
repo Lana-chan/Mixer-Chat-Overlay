@@ -29,11 +29,10 @@ html, body{
 	font-size:.8em;
 	font-family: Verdana, Geneva, sans-serif;
 	position:absolute;
-	bottom:0px;
 	left:0px;
 }
 .chatmessage{
-	background-color:black;
+	background-color:rgba(0,0,0,0.5);
 	opacity: .8;
 	border-radius: 5px;
 	margin:5px;
